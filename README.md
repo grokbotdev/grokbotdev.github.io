@@ -1,15 +1,18 @@
-# grokbotdev.github.io
+# AE Officials Association — Post-Game Reporting (public demo)
 
-Public demo build of **AE Officials Association** post-game reporting.
+Vite source for the **AE Officials Association** post-game reporting demo. No Firebase secrets — the app runs in localStorage demo mode.
 
-This repository is the Vite source (not a prebuilt `dist` bundle) so Railway can clone it and build, and so GitHub Pages can build from `main`.
+## Live demo (phone)
 
-## Demo
+**https://web-production-5b4e3.up.railway.app/**
 
-- Live URL: https://grokbotdev.github.io/
-- Railway: TBD
-- Demo password: `DemoPass123!`
-- No Firebase secrets — the app runs in localStorage demo mode.
+Password for every seeded account: `DemoPass123!`
+
+| Name | Role | Email |
+| --- | --- | --- |
+| Alex Rivera | Official | `alex.rivera@demo.ae-officials.local` |
+| Taylor Brooks | Supervisor | `taylor.brooks@demo.ae-officials.local` |
+| Riley Quinn | Admin | `riley.quinn@demo.ae-officials.local` |
 
 ## Local
 
