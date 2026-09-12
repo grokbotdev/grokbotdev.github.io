@@ -1,0 +1,17 @@
+{
+	admin off
+	persist_config off
+	auto_https off
+	log {
+		format json
+	}
+}
+
+:{$PORT:3000} {
+	encode gzip
+	root * /srv
+	try_files {path} /index.html
+	file_server
+	header X-Content-Type-Options nosniff
+	header Referrer-Policy strict-origin-when-cross-origin
+}

@@ -1,0 +1,8 @@
+node_modules
+dist
+.git
+functions
+*.md
+.env
+.env.*
+!/.env.example
