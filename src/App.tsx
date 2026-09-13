@@ -23,8 +23,10 @@ export function App() {
           <Route element={<ProtectedRoute roles={["supervisor"]} />}>
             <Route path="reports" element={<ReportsPage />} />
           </Route>
-          <Route element={<ProtectedRoute roles={["admin"]} />}>
+          <Route element={<ProtectedRoute roles={["admin", "supervisor"]} />}>
             <Route path="library" element={<LibraryPage />} />
+          </Route>
+          <Route element={<ProtectedRoute roles={["admin"]} />}>
             <Route path="playlists" element={<PlaylistsPage />} />
           </Route>
         </Route>

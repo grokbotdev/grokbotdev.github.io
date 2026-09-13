@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { clipPlaybackSrc } from "../lib/playback";
 import { attachLocalVideo, enqueuePlaceholderProcessing, formatBytes, processingLabel } from "../lib/videoUpload";
 import { UPLOAD_PLAY_TYPES, type GameVideo } from "../types";
 
@@ -72,8 +73,8 @@ export function VideoSlots({
               </span>
             )}
           </label>
-          {video.localPreviewUrl || video.remoteUrl ? (
-            <video className="video-preview" controls src={video.localPreviewUrl || video.remoteUrl} />
+          {clipPlaybackSrc(video) ? (
+            <video className="video-preview" controls src={clipPlaybackSrc(video)} />
           ) : null}
           <div className="field">
             <label htmlFor={`play-${video.slot}`}>Play type</label>

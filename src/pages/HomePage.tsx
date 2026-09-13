@@ -22,8 +22,8 @@ export function HomePage() {
             {user.role === "official"
               ? "Draft and submit reports for crews you worked. Submitted games lock the crew."
               : user.role === "supervisor"
-                ? "Review every submitted packet, comment on video and 4-minute lines, and keep admin notes."
-                : "View all games and manage the association video library. Admins do not post supervisor comments."}
+                ? "Review every submitted packet, comment on video and 4-minute lines, keep admin notes, and browse the video library."
+                : "View all games and manage the association video library and playlists. Admins do not post supervisor comments."}
           </p>
         </div>
         {user.role === "official" ? (

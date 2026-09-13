@@ -89,6 +89,10 @@ export function canEditAdminNotes(user: PublicUser): boolean {
 }
 
 export function canViewLibrary(user: PublicUser): boolean {
+  return user.role === "admin" || user.role === "supervisor";
+}
+
+export function canManagePlaylists(user: PublicUser): boolean {
   return user.role === "admin";
 }
 
@@ -103,6 +107,7 @@ export function navForRole(role: Role): { to: string; label: string }[] {
     return [
       { to: "/", label: "All games" },
       { to: "/reports", label: "Reports" },
+      { to: "/library", label: "Video library" },
     ];
   }
   return [

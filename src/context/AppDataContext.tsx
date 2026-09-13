@@ -16,6 +16,7 @@ import {
   updateGame,
   userById,
 } from "../lib/demoStore";
+import { canManagePlaylists, canViewLibrary } from "../lib/rules";
 import type { Game, Playlist, PublicUser, SupervisorComment } from "../types";
 import { useAuth } from "./AuthContext";
 
@@ -52,9 +53,9 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     };
     return {
       games: actor ? gamesFor(actor) : [],
-      playlists: actor?.role === "admin" ? snapshot.playlists : [],
+      playlists: actor && canManagePlaylists(actor) ? snapshot.playlists : [],
       officials: listOfficials(),
-      library: actor?.role === "admin" ? libraryVideos() : [],
+      library: actor && canViewLibrary(actor) ? libraryVideos() : [],
       getGame: (id) => {
         const game = gameById(id);
         if (!game || !actor || !gamesFor(actor).some((item) => item.id === id)) return undefined;

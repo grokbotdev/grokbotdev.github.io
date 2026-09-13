@@ -1,5 +1,6 @@
 import type { FourMinuteLine, Half } from "../types";
 import { createId } from "./ids";
+import { isFourMinuteLineComplete } from "./rules";
 
 export function emptyFourMinuteLine(carry?: Pick<FourMinuteLine, "half" | "gameClock">): FourMinuteLine {
   return {
@@ -43,3 +44,12 @@ export function isCarryOnly(line: FourMinuteLine): boolean {
 }
 
 export const HALVES: Half[] = ["1st", "2nd", "OT"];
+
+/** Persistable entries only. An incomplete trailing composer is never saved. */
+export function committedFourMinuteLines(lines: FourMinuteLine[]): FourMinuteLine[] {
+  const last = lines[lines.length - 1];
+  if (last && !isFourMinuteLineComplete(last)) {
+    return lines.slice(0, -1).filter(isFourMinuteLineComplete);
+  }
+  return lines.filter(isFourMinuteLineComplete);
+}
