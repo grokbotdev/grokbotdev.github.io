@@ -21,13 +21,13 @@ export function LoginPage() {
     <div className="login-wrap">
       <aside className="login-hero">
         <div>
-          <p className="kicker" style={{ color: "var(--orange)" }}>
+          <p className="kicker">
             AE Officials Association
           </p>
           <h1>Post-game reporting</h1>
           <p>Invite-only crew packets, last-four review, and supervisor film notes.</p>
         </div>
-        <p className="meta" style={{ color: "#8b919a" }}>
+        <p className="meta">
           No public sign-up. Access is provisioned by the association.
         </p>
       </aside>
