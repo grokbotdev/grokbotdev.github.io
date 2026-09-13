@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { emptyFourMinuteLine, HALVES, nextFourMinuteLine } from "../lib/fourMinute";
+import { useEffect, useState } from "react";
+import { committedFourMinuteLines, emptyFourMinuteLine, HALVES, nextFourMinuteLine } from "../lib/fourMinute";
 import { isFourMinuteLineComplete } from "../lib/rules";
 import {
   COURT_POSITIONS,
@@ -19,15 +19,10 @@ function officialOptions(crew: CrewAssignment[]) {
     .map((seat) => ({ id: seat.userId as string, label: `${seat.position} ${seat.name}` }));
 }
 
-function splitLines(lines: FourMinuteLine[], disabled: boolean | undefined, fallback: FourMinuteLine) {
+function initialComposer(lines: FourMinuteLine[]): FourMinuteLine {
   const last = lines[lines.length - 1];
-  if (!disabled && last && !isFourMinuteLineComplete(last)) {
-    return { committed: lines.slice(0, -1), composer: last };
-  }
-  return {
-    committed: lines,
-    composer: last ? nextFourMinuteLine(last) : fallback,
-  };
+  if (last && !isFourMinuteLineComplete(last)) return last;
+  return last ? nextFourMinuteLine(last) : emptyFourMinuteLine();
 }
 
 export function newFourMinuteLine(): FourMinuteLine {
@@ -47,33 +42,21 @@ export function FourMinuteEditor({
   disabled?: boolean;
   onChange: (lines: FourMinuteLine[]) => void;
 }) {
-  const fallbackRef = useRef(emptyFourMinuteLine());
-  const [committed, setCommitted] = useState(() => splitLines(lines, disabled, fallbackRef.current).committed);
-  const [composer, setComposer] = useState(() => splitLines(lines, disabled, fallbackRef.current).composer);
+  const [committed, setCommitted] = useState(() => committedFourMinuteLines(lines));
+  const [composer, setComposer] = useState(() => initialComposer(lines));
   const [error, setError] = useState("");
-  const committedKey = lines.filter(isFourMinuteLineComplete).map((line) => line.id).join("|");
 
   useEffect(() => {
-    const next = splitLines(lines, disabled, fallbackRef.current);
-    setCommitted(next.committed);
-    setComposer((current) => (current.id === next.composer.id ? next.composer : next.composer));
-  }, [committedKey, disabled, lines]);
+    if (disabled) {
+      setCommitted(committedFourMinuteLines(lines));
+    }
+  }, [disabled, lines]);
 
   const officials = officialOptions(crew);
 
-  function emit(nextCommitted: FourMinuteLine[], nextComposer: FourMinuteLine) {
+  function persist(nextCommitted: FourMinuteLine[]) {
     setCommitted(nextCommitted);
-    setComposer(nextComposer);
-    const shouldInclude =
-      nextComposer.half !== "" ||
-      nextComposer.gameClock.trim() !== "" ||
-      nextComposer.positions.length > 0 ||
-      nextComposer.officialIds.length > 0 ||
-      nextComposer.decision !== "" ||
-      nextComposer.playType.trim() !== "" ||
-      nextComposer.explanation.trim() !== "" ||
-      Boolean(nextComposer.videoId);
-    onChange(shouldInclude ? [...nextCommitted, nextComposer] : nextCommitted);
+    onChange(nextCommitted);
   }
 
   function addLine() {
@@ -82,19 +65,18 @@ export function FourMinuteEditor({
       return;
     }
     setError("");
-    emit([...committed, composer], nextFourMinuteLine(composer));
+    const nextCommitted = [...committed, composer];
+    setComposer(nextFourMinuteLine(composer));
+    persist(nextCommitted);
   }
 
   function removeCommitted(id: string) {
-    emit(
-      committed.filter((line) => line.id !== id),
-      composer,
-    );
+    persist(committed.filter((line) => line.id !== id));
   }
 
   function patchComposer(partial: Partial<FourMinuteLine>) {
     setError("");
-    emit(committed, { ...composer, ...partial });
+    setComposer((current) => ({ ...current, ...partial }));
   }
 
   return (
@@ -122,10 +104,17 @@ export function FourMinuteEditor({
       {disabled ? (
         committed.length === 0 ? <p className="meta">No 4-minute lines on this game.</p> : null
       ) : (
-        <article className="fm-composer">
+        <article
+          className="fm-composer"
+          onKeyDown={(event) => {
+            if (event.key === "Enter" && event.target instanceof HTMLInputElement) {
+              event.preventDefault();
+            }
+          }}
+        >
           <div className="fm-composer-head">
             <span className="kicker">New line</span>
-            <span className="meta">Half and clock carry to the next entry</span>
+            <span className="meta">Tap Add — completing fields does not save a line</span>
           </div>
           <div className="form-grid">
             <div className="field">
@@ -226,7 +215,7 @@ export function FourMinuteEditor({
           {error ? <div className="error">{error}</div> : null}
           <div className="row">
             <button className="primary" type="button" onClick={addLine}>
-              Add line
+              Add
             </button>
             <span className="meta">Adds this entry, then keeps half and clock for the next one.</span>
           </div>
