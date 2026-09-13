@@ -32,7 +32,7 @@ export function AppShell() {
               {user.name}
               <span className="role-chip"> {user.role}</span>
             </span>
-            <button className="text-btn" type="button" onClick={logout} style={{ color: "#d7dbe1" }}>
+            <button className="text-btn" type="button" onClick={logout}>
               Sign out
             </button>
           </div>
