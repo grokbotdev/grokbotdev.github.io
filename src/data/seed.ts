@@ -1,3 +1,4 @@
+import { DEMO_PLAYBACK_URLS } from "../lib/playback";
 import type { Game, Playlist, User } from "../types";
 
 export const DEMO_PASSWORD = "DemoPass123!";
@@ -65,7 +66,7 @@ function video(
     mimeType: "video/mp4",
     processingStatus: "ready",
     storagePath: `games/seed/${id}/source.mp4`,
-    remoteUrl: "",
+    remoteUrl: DEMO_PLAYBACK_URLS[id] ?? "",
   };
 }
 

@@ -85,6 +85,7 @@ export function NewGamePage() {
 
   function onSubmit(event: FormEvent) {
     event.preventDefault();
+    if (step !== 3) return;
     setError("");
     const errors = validateSubmit(previewGame);
     if (errors.length) {
@@ -119,7 +120,7 @@ export function NewGamePage() {
         {step === 1 ? (
           <div className="panel grid">
             <div className="form-grid">
-              <div className="field">
+              <div className="field field-date">
                 <label htmlFor="date">Date</label>
                 <input id="date" type="date" value={date} onChange={(event) => setDate(event.target.value)} required />
               </div>
@@ -203,7 +204,7 @@ export function NewGamePage() {
                 .join(" · ")}
             </p>
             <p className="meta">{videos.filter((video) => video.fileName).length} of 4 videos attached</p>
-            {fourMin ? <p className="meta">{lines.length} 4-minute line(s)</p> : null}
+            {fourMin ? <p className="meta">{lines.length} 4-minute line(s) added</p> : null}
           </div>
         ) : null}
 

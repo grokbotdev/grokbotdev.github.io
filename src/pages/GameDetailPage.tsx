@@ -124,7 +124,7 @@ export function GameDetailPage() {
       <div className="panel grid">
         <h2>Game</h2>
         <div className="form-grid">
-          <div className="field">
+          <div className="field field-date">
             <label>Date</label>
             <input
               type="date"
@@ -203,6 +203,7 @@ export function GameDetailPage() {
           <p className="meta">Optional on this scoreline.</p>
         )}
         <FourMinuteEditor
+          key={draft.id}
           lines={draft.fourMinuteLines}
           crew={draft.crew}
           videos={draft.videos}
